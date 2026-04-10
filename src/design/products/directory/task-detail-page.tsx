@@ -1,4 +1,4 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 import { ArrowRight, Globe, Mail, MapPin, Phone, ShieldCheck, Tag } from 'lucide-react'
 import { ContentImage } from '@/components/shared/content-image'
 import { SchemaJsonLd } from '@/components/seo/schema-jsonld'
@@ -50,7 +50,7 @@ export function DirectoryTaskDetailPage({
       <SchemaJsonLd data={schemaPayload} />
       <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <Link href={taskRoute} className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-950">
-          ← Back to {taskLabel}
+          ? Back to {taskLabel}
         </Link>
 
         <section className="grid gap-8 lg:grid-cols-[1.02fr_0.98fr] lg:items-start">
@@ -153,3 +153,5 @@ export function DirectoryTaskDetailPage({
     </div>
   )
 }
+
+
