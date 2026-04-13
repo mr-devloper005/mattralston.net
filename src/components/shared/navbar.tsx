@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils'
 import { siteContent } from '@/config/site.content'
 import { getFactoryState } from '@/design/factory/get-factory-state'
 import { NAVBAR_OVERRIDE_ENABLED, NavbarOverride } from '@/overrides/navbar'
+import { NavbarSearchForm } from '@/components/shared/navbar-search-form'
 
 const NavbarAuthControls = dynamic(() => import('@/components/shared/navbar-auth-controls').then((mod) => mod.NavbarAuthControls), {
   ssr: false,
@@ -105,6 +106,9 @@ export function Navbar() {
     icon: taskIcons[task.key] || LayoutGrid,
   }))
   const primaryTask = SITE_CONFIG.tasks.find((task) => task.key === recipe.primaryTask && task.enabled) || primaryNavigation[0]
+  const primarySearchType = primaryTask
+    ? SITE_CONFIG.tasks.find((t) => t.key === primaryTask.key)?.contentType
+    : undefined
   const isDirectoryProduct = recipe.homeLayout === 'listing-home' || recipe.homeLayout === 'classified-home'
 
   if (isDirectoryProduct) {
@@ -146,10 +150,11 @@ export function Navbar() {
           {isMobileMenuOpen && (
             <div className={palette.mobile}>
               <div className="space-y-2 px-4 py-4">
-                <div className={cn('mb-3 flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium', palette.search)}>
-                  <Search className="h-4 w-4" />
-                  Find businesses, spaces, and services
-                </div>
+                <NavbarSearchForm
+                  taskType={primarySearchType}
+                  placeholder="Find businesses, spaces, services…"
+                  className={cn('mb-3 rounded-2xl px-4 py-3 text-sm font-medium', palette.search)}
+                />
                 {mobileNavigation.map((item) => {
                   const isActive = pathname.startsWith(item.href)
                   return (
@@ -176,13 +181,11 @@ export function Navbar() {
               </div>
             </Link>
 
-            <div className={cn('mt-7 flex items-center gap-3 rounded-[1.4rem] px-4 py-3 text-sm', palette.search)}>
-              <Search className="h-4 w-4 shrink-0" />
-              <div className="min-w-0">
-                <div className="truncate font-medium">Find local businesses</div>
-                <div className="truncate text-xs opacity-70">Search by service, category, or city</div>
-              </div>
-            </div>
+            <NavbarSearchForm
+              taskType={primarySearchType}
+              placeholder="Search listings, category, city…"
+              className={cn('mt-7 rounded-[1.4rem] px-4 py-3 text-sm', palette.search)}
+            />
 
             {primaryTask ? (
               <Link href={primaryTask.route} className="mt-5 inline-flex items-center gap-2 self-start rounded-full border border-current/10 px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] opacity-75">
@@ -314,9 +317,16 @@ export function Navbar() {
           <div className={cn('mt-7 rounded-[1.35rem] border border-current/10 px-4 py-4', isFloating ? 'bg-white/6 backdrop-blur' : isEditorial ? 'bg-white/70' : isUtility ? 'bg-white/80' : 'bg-slate-50')}>
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] opacity-70">
               <Search className="h-3.5 w-3.5" />
-              Quick Find
+              Quick find
             </div>
-            <p className="mt-2 text-sm leading-6 opacity-80">Browse by task, lane, or content type without cramped top navigation.</p>
+            <NavbarSearchForm
+              className={cn(
+                'mt-3 rounded-xl border px-3 py-2',
+                isFloating ? 'border-white/15 bg-white/8 text-white placeholder:text-white/50' : 'border-slate-200 bg-white text-slate-900',
+              )}
+              placeholder="Search the site…"
+            />
+            <p className="mt-3 text-sm leading-6 opacity-80">Browse by task in the nav, or search across everything here.</p>
           </div>
 
           {primaryTask ? (

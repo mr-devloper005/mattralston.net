@@ -5,5 +5,5 @@ export const revalidate = 3;
 export const generateMetadata = () => buildTaskMetadata("pdf");
 
 export default function PdfLibraryPage({ searchParams }: { searchParams?: { category?: string } }) {
-  return <TaskListPage task="pdf" category={searchParams?.category} />;
+  return <TaskListPage task="pdf" category={searchParams?.category} brandRibbon />;
 }

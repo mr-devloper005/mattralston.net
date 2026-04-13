@@ -39,12 +39,21 @@ const variantShells = {
   'sbm-library': 'bg-[linear-gradient(180deg,#f7f8fc_0%,#ffffff_100%)]',
 } as const
 
-export async function TaskListPage({ task, category }: { task: TaskKey; category?: string }) {
+export async function TaskListPage({
+  task,
+  category,
+  brandRibbon = false,
+}: {
+  task: TaskKey
+  category?: string
+  brandRibbon?: boolean
+}) {
   if (TASK_LIST_PAGE_OVERRIDE_ENABLED) {
-    return await TaskListPageOverride({ task, category })
+    return await TaskListPageOverride({ task, category, brandRibbon })
   }
 
   const taskConfig = getTaskConfig(task)
+  const searchTaskParam = taskConfig?.contentType || task
   const posts = await fetchTaskPosts(task, 30)
   const normalizedCategory = category ? normalizeCategory(category) : 'all'
   const intro = taskIntroCopy[task]
@@ -88,6 +97,25 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
   return (
     <div className={`min-h-screen ${shellClass}`}>
       <NavbarShell />
+      {brandRibbon ? (
+        <div className="border-b border-[#B08D57]/20 bg-[linear-gradient(90deg,transparent_0%,rgba(176,141,87,0.06)_50%,transparent_100%)]">
+          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-4 px-4 py-4 sm:px-6 lg:px-8">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#B08D57]/20 bg-white p-1 shadow-sm">
+              <img
+                src="/favicon.png?v=20260413"
+                alt=""
+                width={36}
+                height={36}
+                className="h-full w-full object-contain"
+              />
+            </div>
+            <span className="hidden h-px w-10 bg-[#B08D57]/40 sm:block" aria-hidden />
+            <p className="max-w-xl text-center text-[10px] font-semibold uppercase leading-relaxed tracking-[0.26em] text-[#1A242F] sm:text-left sm:text-[11px]">
+              Matt R Alston · calm surfaces, trusted discovery
+            </p>
+          </div>
+        </div>
+      ) : null}
       <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         {task === 'listing' ? (
           <SchemaJsonLd
@@ -131,17 +159,33 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
                 <Link href="/search" className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ${ui.soft}`}>Open search</Link>
               </div>
             </div>
-            <form className={`grid gap-3 rounded-[2rem] p-6 shadow-[0_18px_50px_rgba(15,23,42,0.06)] ${ui.soft}`} action={taskConfig?.route || '#'}>
+            <form className={`grid gap-3 rounded-[2rem] p-6 shadow-[0_18px_50px_rgba(15,23,42,0.06)] ${ui.soft}`} action="/search" method="get">
+              <input type="hidden" name="master" value="1" />
+              <input type="hidden" name="task" value={searchTaskParam} />
+              <div>
+                <label className={`text-xs uppercase tracking-[0.2em] ${ui.muted}`}>Keywords</label>
+                <input
+                  type="search"
+                  name="q"
+                  placeholder="Search listings…"
+                  className={`mt-2 h-11 w-full rounded-xl px-3 text-sm ${ui.input}`}
+                  autoComplete="off"
+                />
+              </div>
               <div>
                 <label className={`text-xs uppercase tracking-[0.2em] ${ui.muted}`}>Category</label>
-                <select name="category" defaultValue={normalizedCategory} className={`mt-2 h-11 w-full rounded-xl px-3 text-sm ${ui.input}`}>
-                  <option value="all">All categories</option>
+                <select
+                  name="category"
+                  defaultValue={normalizedCategory === 'all' ? '' : normalizedCategory}
+                  className={`mt-2 h-11 w-full rounded-xl px-3 text-sm ${ui.input}`}
+                >
+                  <option value="">All categories</option>
                   {CATEGORY_OPTIONS.map((item) => (
                     <option key={item.slug} value={item.slug}>{item.name}</option>
                   ))}
                 </select>
               </div>
-              <button type="submit" className={`h-11 rounded-xl text-sm font-medium ${ui.button}`}>Apply filters</button>
+              <button type="submit" className={`h-11 rounded-xl text-sm font-medium ${ui.button}`}>Search</button>
             </form>
           </section>
         ) : null}
@@ -156,14 +200,31 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
             <div className={`rounded-[2rem] p-6 ${ui.panel}`}>
               <p className={`text-xs font-semibold uppercase tracking-[0.24em] ${ui.muted}`}>Reading note</p>
               <p className={`mt-4 text-sm leading-7 ${ui.muted}`}>Use category filters to jump between topics without collapsing the page into the same repeated card rhythm used by other task types.</p>
-              <form className="mt-5 flex items-center gap-3" action={taskConfig?.route || '#'}>
-                <select name="category" defaultValue={normalizedCategory} className={`h-11 flex-1 rounded-xl px-3 text-sm ${ui.input}`}>
-                  <option value="all">All categories</option>
-                  {CATEGORY_OPTIONS.map((item) => (
-                    <option key={item.slug} value={item.slug}>{item.name}</option>
-                  ))}
-                </select>
-                <button type="submit" className={`h-11 rounded-xl px-4 text-sm font-medium ${ui.button}`}>Apply</button>
+              <form className="mt-5 grid gap-3 sm:grid-cols-[1fr_auto]" action="/search" method="get">
+                <input type="hidden" name="master" value="1" />
+                <input type="hidden" name="task" value={searchTaskParam} />
+                <input
+                  type="search"
+                  name="q"
+                  placeholder="Search this section…"
+                  className={`h-11 w-full rounded-xl px-3 text-sm ${ui.input}`}
+                  autoComplete="off"
+                />
+                <div className="flex gap-2 sm:col-span-2">
+                  <select
+                    name="category"
+                    defaultValue={normalizedCategory === 'all' ? '' : normalizedCategory}
+                    className={`h-11 min-w-0 flex-1 rounded-xl px-3 text-sm ${ui.input}`}
+                  >
+                    <option value="">All categories</option>
+                    {CATEGORY_OPTIONS.map((item) => (
+                      <option key={item.slug} value={item.slug}>{item.name}</option>
+                    ))}
+                  </select>
+                  <button type="submit" className={`h-11 shrink-0 rounded-xl px-4 text-sm font-medium ${ui.button}`}>
+                    Search
+                  </button>
+                </div>
               </form>
             </div>
           </section>
@@ -177,6 +238,20 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
               </div>
               <h1 className="mt-5 text-5xl font-semibold tracking-[-0.05em]">{taskConfig?.description || 'Latest posts'}</h1>
               <p className={`mt-5 max-w-2xl text-sm leading-8 ${ui.muted}`}>This surface leans into stronger imagery, larger modules, and more expressive spacing so visual content feels materially different from reading and directory pages.</p>
+              <form action="/search" method="get" className={`mt-6 flex flex-wrap items-center gap-2`}>
+                <input type="hidden" name="master" value="1" />
+                <input type="hidden" name="task" value={searchTaskParam} />
+                <input
+                  type="search"
+                  name="q"
+                  placeholder="Search visuals…"
+                  className={`h-11 min-w-[200px] flex-1 rounded-xl px-3 text-sm ${ui.input}`}
+                  autoComplete="off"
+                />
+                <button type="submit" className={`h-11 rounded-xl px-4 text-sm font-medium ${ui.button}`}>
+                  Search
+                </button>
+              </form>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className={`min-h-[220px] rounded-[2rem] ${ui.panel}`} />
@@ -194,6 +269,20 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
                 <p className={`text-xs uppercase tracking-[0.3em] ${ui.muted}`}>{taskConfig?.label || task}</p>
                 <h1 className="mt-3 text-4xl font-semibold tracking-[-0.05em] text-foreground">Profiles with stronger identity, trust, and reputation cues.</h1>
                 <p className={`mt-5 max-w-2xl text-sm leading-8 ${ui.muted}`}>This layout prioritizes the person or business surface first, then lets the feed continue below without borrowing the same visual logic used by articles or listings.</p>
+                <form action="/search" method="get" className="mt-6 flex flex-wrap items-center gap-2">
+                  <input type="hidden" name="master" value="1" />
+                  <input type="hidden" name="task" value={searchTaskParam} />
+                  <input
+                    type="search"
+                    name="q"
+                    placeholder="Search profiles…"
+                    className={`h-11 min-w-[200px] flex-1 rounded-xl px-3 text-sm ${ui.input}`}
+                    autoComplete="off"
+                  />
+                  <button type="submit" className={`h-11 rounded-xl px-4 text-sm font-medium ${ui.button}`}>
+                    Search
+                  </button>
+                </form>
               </div>
             </div>
           </section>
@@ -204,6 +293,20 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
             <div className={`rounded-[1.8rem] p-6 ${ui.panel}`}>
               <p className={`text-xs uppercase tracking-[0.3em] ${ui.muted}`}>{taskConfig?.label || task}</p>
               <h1 className="mt-3 text-4xl font-semibold tracking-[-0.05em] text-foreground">Fast-moving notices, offers, and responses in a compact board format.</h1>
+              <form action="/search" method="get" className="mt-6 flex flex-wrap items-center gap-2">
+                <input type="hidden" name="master" value="1" />
+                <input type="hidden" name="task" value={searchTaskParam} />
+                <input
+                  type="search"
+                  name="q"
+                  placeholder="Search classifieds…"
+                  className={`h-11 min-w-[200px] flex-1 rounded-xl px-3 text-sm ${ui.input}`}
+                  autoComplete="off"
+                />
+                <button type="submit" className={`h-11 rounded-xl px-4 text-sm font-medium ${ui.button}`}>
+                  Search
+                </button>
+              </form>
             </div>
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
               {['Quick to scan', 'Shorter response path', 'Clearer urgency cues'].map((item) => (
@@ -224,14 +327,31 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
             </div>
             <div className={`rounded-[2rem] p-6 ${ui.panel}`}>
               <p className={`text-xs uppercase tracking-[0.24em] ${ui.muted}`}>Collection filter</p>
-              <form className="mt-4 flex items-center gap-3" action={taskConfig?.route || '#'}>
-                <select name="category" defaultValue={normalizedCategory} className={`h-11 flex-1 rounded-xl px-3 text-sm ${ui.input}`}>
-                  <option value="all">All categories</option>
-                  {CATEGORY_OPTIONS.map((item) => (
-                    <option key={item.slug} value={item.slug}>{item.name}</option>
-                  ))}
-                </select>
-                <button type="submit" className={`h-11 rounded-xl px-4 text-sm font-medium ${ui.button}`}>Apply</button>
+              <form className="mt-4 grid gap-3" action="/search" method="get">
+                <input type="hidden" name="master" value="1" />
+                <input type="hidden" name="task" value={searchTaskParam} />
+                <input
+                  type="search"
+                  name="q"
+                  placeholder="Search collections…"
+                  className={`h-11 w-full rounded-xl px-3 text-sm ${ui.input}`}
+                  autoComplete="off"
+                />
+                <div className="flex gap-2">
+                  <select
+                    name="category"
+                    defaultValue={normalizedCategory === 'all' ? '' : normalizedCategory}
+                    className={`h-11 min-w-0 flex-1 rounded-xl px-3 text-sm ${ui.input}`}
+                  >
+                    <option value="">All categories</option>
+                    {CATEGORY_OPTIONS.map((item) => (
+                      <option key={item.slug} value={item.slug}>{item.name}</option>
+                    ))}
+                  </select>
+                  <button type="submit" className={`h-11 shrink-0 rounded-xl px-4 text-sm font-medium ${ui.button}`}>
+                    Search
+                  </button>
+                </div>
               </form>
             </div>
           </section>
@@ -243,11 +363,6 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
             {intro.paragraphs.map((paragraph) => (
               <p key={paragraph.slice(0, 40)} className={`mt-4 text-sm leading-7 ${ui.muted}`}>{paragraph}</p>
             ))}
-            <div className="mt-4 flex flex-wrap gap-4 text-sm">
-              {intro.links.map((link) => (
-                <a key={link.href} href={link.href} className="font-semibold text-foreground hover:underline">{link.label}</a>
-              ))}
-            </div>
           </section>
         ) : null}
 

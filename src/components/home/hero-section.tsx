@@ -106,6 +106,26 @@ export function HeroSection({ images, tasks }: { images: string[]; tasks: TaskCo
             </h1>
             <p className={`mt-6 max-w-2xl text-base leading-8 sm:text-lg ${palette.body}`}>{siteContent.hero.description}</p>
 
+            {SITE_THEME.hero.variant === "search-first" ? (
+              <form action="/search" method="get" className="mt-8 flex w-full max-w-2xl flex-col gap-3 sm:flex-row sm:items-center">
+                <input type="hidden" name="master" value="1" />
+                <div className="relative flex-1">
+                  <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 opacity-50" />
+                  <input
+                    type="search"
+                    name="q"
+                    placeholder={siteContent.hero.searchPlaceholder}
+                    className={`h-12 w-full rounded-full border pl-12 pr-4 text-sm outline-none ${palette.secondary}`}
+                    autoComplete="off"
+                    aria-label="Search"
+                  />
+                </div>
+                <Button type="submit" size="lg" className={`h-12 shrink-0 rounded-full px-8 ${palette.primary}`}>
+                  Search
+                </Button>
+              </form>
+            ) : null}
+
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg" className={`rounded-full px-6 ${palette.primary}`}>
                 <Link href={siteContent.hero.primaryCta.href}>

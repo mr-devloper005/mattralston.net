@@ -6,7 +6,7 @@ import { NavbarShell } from '@/components/shared/navbar-shell'
 import { Footer } from '@/components/shared/footer'
 import { SchemaJsonLd } from '@/components/seo/schema-jsonld'
 import { TaskPostCard } from '@/components/shared/task-post-card'
-import { SITE_CONFIG, type TaskKey } from '@/lib/site-config'
+import { SITE_CONFIG, getTaskConfig, type TaskKey } from '@/lib/site-config'
 import { buildPageMetadata } from '@/lib/seo'
 import { fetchTaskPosts } from '@/lib/task-data'
 import { siteContent } from '@/config/site.content'
@@ -166,14 +166,43 @@ function DirectoryHome({ primaryTask, enabledTasks, listingPosts, classifiedPost
               </h1>
               <p className={`mt-6 max-w-2xl text-base leading-8 ${tone.muted}`}>{SITE_CONFIG.description}</p>
 
-              <div className={`mt-8 grid gap-3 rounded-[2rem] p-4 ${tone.panel} md:grid-cols-[1.25fr_0.8fr_auto]`}>
-                <div className="rounded-full bg-black/5 px-4 py-3 text-sm">What do you need today?</div>
-                <div className="rounded-full bg-black/5 px-4 py-3 text-sm">Choose area or city</div>
-                <Link href={primaryTask?.route || '/listings'} className={`inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ${tone.action}`}>
+              <form
+                action="/search"
+                method="get"
+                className={`mt-8 grid gap-3 rounded-[2rem] p-4 ${tone.panel} md:grid-cols-[1.25fr_0.8fr_auto]`}
+              >
+                <input type="hidden" name="master" value="1" />
+                {primaryTask ? (
+                  <input
+                    type="hidden"
+                    name="task"
+                    value={getTaskConfig(primaryTask.key)?.contentType || primaryTask.key}
+                  />
+                ) : null}
+                <input
+                  type="search"
+                  name="q"
+                  placeholder="What do you need today?"
+                  className="min-h-11 rounded-full border-0 bg-black/5 px-4 py-3 text-sm text-foreground outline-none placeholder:text-foreground/45 focus-visible:ring-2 focus-visible:ring-foreground/15"
+                  autoComplete="off"
+                  aria-label="What do you need today?"
+                />
+                <input
+                  type="text"
+                  name="loc"
+                  placeholder="Choose area or city"
+                  className="min-h-11 rounded-full border-0 bg-black/5 px-4 py-3 text-sm text-foreground outline-none placeholder:text-foreground/45 focus-visible:ring-2 focus-visible:ring-foreground/15"
+                  autoComplete="off"
+                  aria-label="Area or city"
+                />
+                <button
+                  type="submit"
+                  className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ${tone.action}`}
+                >
                   Browse now
                   <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
+                </button>
+              </form>
 
               <div className="mt-8 grid gap-3 sm:grid-cols-3">
                 {[

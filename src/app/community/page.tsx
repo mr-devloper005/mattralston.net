@@ -5,5 +5,5 @@ export const revalidate = 3;
 export const generateMetadata = () => buildTaskMetadata("social");
 
 export default function CommunityPage({ searchParams }: { searchParams?: { category?: string } }) {
-  return <TaskListPage task="social" category={searchParams?.category} />;
+  return <TaskListPage task="social" category={searchParams?.category} brandRibbon />;
 }
