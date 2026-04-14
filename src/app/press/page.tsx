@@ -1,115 +1,67 @@
-﻿'use client'
+import Link from "next/link";
+import { Megaphone, Newspaper, Download } from "lucide-react";
+import { NavbarShell } from "@/components/shared/navbar-shell";
+import { Footer } from "@/components/shared/footer";
 
-import { useState } from 'react'
-import Image from 'next/image'
-import { PageShell } from '@/components/shared/page-shell'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
-import { useToast } from '@/components/ui/use-toast'
-import { mockPressAssets, mockPressCoverage } from '@/data/mock-data'
+const pressCoverage = [
+  { outlet: "Tech Chronicle", headline: "How profile-first design improves trust in discovery products", date: "April 2026" },
+  { outlet: "Product Weekly", headline: "Inside the redesign of a social knowledge platform", date: "March 2026" },
+  { outlet: "Community Wire", headline: "Why creator identity pages are becoming core product surfaces", date: "February 2026" },
+];
+
+const assets = [
+  { name: "Brand Logos", format: "SVG, PNG" },
+  { name: "UI Screenshots", format: "PNG" },
+  { name: "Media Fact Sheet", format: "PDF" },
+];
 
 export default function PressPage() {
-  const { toast } = useToast()
-  const [activeAssetId, setActiveAssetId] = useState<string | null>(null)
-  const activeAsset = mockPressAssets.find((asset) => asset.id === activeAssetId)
-
   return (
-    <PageShell
-      title="Press"
-      description="Media resources, brand assets, and press coverage."
-    >
-      <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <Card className="border-border bg-card">
-          <CardContent className="p-6 space-y-3">
-            <h2 className="text-lg font-semibold text-foreground">Press Kit</h2>
-            <p className="text-sm text-muted-foreground">
-              Download logos, product screenshots, and brand guidelines for media use.
-            </p>
-            <div className="grid gap-2">
-              {mockPressAssets.map((asset) => (
-                <div key={asset.id} className="rounded-lg border border-border bg-secondary/40 px-4 py-3">
-                  <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{asset.title}</p>
-                      <p className="text-xs text-muted-foreground">{asset.description}</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="secondary">{asset.fileType}</Badge>
-                      <Button size="sm" variant="outline" onClick={() => setActiveAssetId(asset.id)}>
-                        Preview
-                      </Button>
-                      <Button
-                        size="sm"
-                        onClick={() =>
-                          toast({
-                            title: 'Download started',
-                            description: `${asset.title} is downloading.`,
-                          })
-                        }
-                      >
-                        Download
-                      </Button>
-                    </div>
-                  </div>
+    <div className="min-h-screen bg-[linear-gradient(180deg,#f8faff_0%,#eef2f9_100%)]">
+      <NavbarShell />
+      <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <p className="inline-flex items-center gap-2 rounded-full bg-red-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-red-700">
+            <Megaphone className="h-3.5 w-3.5" />
+            Press
+          </p>
+          <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-slate-900">Media resources and company updates</h1>
+          <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-600">
+            Find the latest announcements, media mentions, and press-ready brand assets.
+          </p>
+        </section>
+
+        <section className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h2 className="flex items-center gap-2 text-xl font-semibold text-slate-900"><Newspaper className="h-5 w-5 text-red-700" /> Recent Coverage</h2>
+            <div className="mt-4 space-y-3">
+              {pressCoverage.map((item) => (
+                <div key={item.headline} className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{item.outlet}</p>
+                  <p className="mt-1 text-sm font-semibold text-slate-900">{item.headline}</p>
+                  <p className="mt-1 text-xs text-slate-500">{item.date}</p>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
-        <div className="space-y-4">
-          {mockPressCoverage.map((item) => (
-            <Card key={item.id} className="border-border bg-card transition-transform hover:-translate-y-1">
-              <CardContent className="p-6">
-                <div className="text-xs uppercase tracking-wide text-muted-foreground">{item.outlet}</div>
-                <p className="mt-2 text-sm text-foreground">{item.headline}</p>
-                <p className="mt-2 text-xs text-muted-foreground">{item.date}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
+          </div>
 
-      <Dialog open={Boolean(activeAsset)} onOpenChange={() => setActiveAssetId(null)}>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle>{activeAsset?.title}</DialogTitle>
-          </DialogHeader>
-          {activeAsset?.previewUrl && (
-            <div className="relative aspect-[16/9] overflow-hidden rounded-xl border border-border bg-muted">
-              <Image
-                src={activeAsset.previewUrl}
-                alt={activeAsset.title}
-                fill
-                className="object-cover"
-              />
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h2 className="flex items-center gap-2 text-xl font-semibold text-slate-900"><Download className="h-5 w-5 text-red-700" /> Press Kit</h2>
+            <div className="mt-4 space-y-3">
+              {assets.map((asset) => (
+                <div key={asset.name} className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                  <p className="text-sm font-semibold text-slate-900">{asset.name}</p>
+                  <p className="text-xs text-slate-500">{asset.format}</p>
+                </div>
+              ))}
             </div>
-          )}
-          <p className="text-sm text-muted-foreground">{activeAsset?.description}</p>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setActiveAssetId(null)}>
-              Close
-            </Button>
-            <Button
-              onClick={() =>
-                toast({
-                  title: 'Download started',
-                  description: `${activeAsset?.title} is downloading.`,
-                })
-              }
-            >
-              Download {activeAsset?.fileType}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </PageShell>
-  )
+            <Link href="/contact" className="mt-5 inline-flex rounded-full bg-[#b91c1c] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#991b1b]">
+              Request press resources
+            </Link>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </div>
+  );
 }

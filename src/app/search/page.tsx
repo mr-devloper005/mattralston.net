@@ -1,4 +1,4 @@
-import { PageShell } from "@/components/shared/page-shell";
+﻿import { PageShell } from "@/components/shared/page-shell";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
@@ -72,11 +72,11 @@ export default async function SearchPage({
 
   return (
     <PageShell
-      title="Search"
+      title="Search Profiles and Posts"
       description={
         query
           ? `Results for "${query}"`
-          : "Browse the latest posts across every task."
+          : "Find profiles, discussions, visuals, and listings from one search surface."
       }
       actions={
         <form action="/search" className="flex w-full gap-2 sm:w-auto">
@@ -88,11 +88,11 @@ export default async function SearchPage({
             <Input
               name="q"
               defaultValue={query}
-              placeholder="Search across tasks..."
-              className="h-11 pl-9"
+              placeholder="Search profiles, names, topics..."
+              className="h-11 rounded-full border-slate-300 bg-white pl-9"
             />
           </div>
-          <Button type="submit" className="h-11">
+          <Button type="submit" className="h-11 rounded-full bg-[#b91c1c] text-white hover:bg-[#991b1b]">
             Search
           </Button>
         </form>
@@ -107,10 +107,11 @@ export default async function SearchPage({
           })}
         </div>
       ) : (
-        <div className="rounded-2xl border border-dashed border-border p-10 text-center text-muted-foreground">
+        <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500">
           No matching posts yet.
         </div>
       )}
     </PageShell>
   );
 }
+

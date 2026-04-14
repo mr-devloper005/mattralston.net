@@ -1,4 +1,4 @@
-import { ContentImage } from "@/components/shared/content-image";
+﻿import { ContentImage } from "@/components/shared/content-image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MapPin, Globe, Phone, Tag, Mail } from "lucide-react";
@@ -256,7 +256,7 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
           href={taskConfig?.route || "/"}
           className="mb-6 inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
         >
-          ← Back to {taskConfig?.label || "posts"}
+          ? Back to {taskConfig?.label || "posts"}
         </Link>
 
         <div
@@ -541,3 +541,5 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
     </div>
   );
 }
+
+

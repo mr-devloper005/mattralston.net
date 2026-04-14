@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from '@/components/ui/command'
 import { useToast } from '@/components/ui/use-toast'
+import { useAuth } from '@/lib/auth-context'
 import { FileText, Plus, Tag, Bookmark, Settings, Search } from 'lucide-react'
 
 const quickLinks = [
@@ -14,15 +15,19 @@ const quickLinks = [
 ]
 
 const createActions = [
+  { label: 'Create Profile', href: '/create/profile', icon: Plus },
   { label: 'Create Article', href: '/create/article', icon: Plus },
   { label: 'Create Listing', href: '/create/listing', icon: Plus },
   { label: 'Create Classified', href: '/create/classified', icon: Plus },
   { label: 'Submit Bookmark', href: '/create/sbm', icon: Plus },
 ]
 
+const AUTH_GATED_CREATE_HREFS = ['/create/profile', '/create/article']
+
 export function CommandPalette() {
   const router = useRouter()
   const { toast } = useToast()
+  const { isAuthenticated } = useAuth()
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
@@ -63,7 +68,11 @@ export function CommandPalette() {
             <CommandItem
               key={item.href}
               onSelect={() => {
-                router.push(item.href)
+                const target =
+                  !isAuthenticated && AUTH_GATED_CREATE_HREFS.includes(item.href)
+                    ? `/login?from=${encodeURIComponent(item.href)}`
+                    : item.href
+                router.push(target)
                 setOpen(false)
               }}
             >
