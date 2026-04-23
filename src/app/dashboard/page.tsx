@@ -17,7 +17,6 @@ import {
   Plus,
   ArrowRight,
   Calendar,
-  Bell,
   Settings,
   ChevronRight,
   MoreHorizontal,
@@ -36,6 +35,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { NavbarShell } from "@/components/shared/navbar-shell"
+import { GatedCreateLink } from "@/components/shared/gated-create-link"
 import { useAuth } from "@/lib/auth-context"
 import { useToast } from "@/components/ui/use-toast"
 import { loadFromStorage, storageKeys } from "@/lib/local-storage"
@@ -269,11 +269,6 @@ export default function DashboardPage() {
             </p>
           </div>
           <div className="flex gap-3">
-                <Button variant="outline" size="icon" asChild>
-                  <Link href="/dashboard/notifications">
-                    <Bell className="h-4 w-4" />
-                  </Link>
-                </Button>
             <Button variant="outline" size="icon" asChild>
               <Link href="/settings">
                 <Settings className="h-4 w-4" />
@@ -288,10 +283,10 @@ export default function DashboardPage() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem asChild>
-                  <Link href="/dashboard/articles/new">
+                  <GatedCreateLink href="/dashboard/articles/new" className="flex cursor-pointer items-center">
                     <FileText className="h-4 w-4 mr-2" />
                     New Article
-                  </Link>
+                  </GatedCreateLink>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link href="/dashboard/listings/new">
@@ -744,11 +739,11 @@ export default function DashboardPage() {
               </h2>
               <div className="space-y-2">
                 <Button variant="outline" className="w-full justify-start" asChild>
-                  <Link href="/dashboard/articles/new">
+                  <GatedCreateLink href="/dashboard/articles/new" className="inline-flex w-full items-center">
                     <FileText className="h-4 w-4 mr-3" />
                     Write new article
                     <ChevronRight className="h-4 w-4 ml-auto" />
-                  </Link>
+                  </GatedCreateLink>
                 </Button>
                 <Button variant="outline" className="w-full justify-start" asChild>
                   <Link href="/dashboard/listings/new">

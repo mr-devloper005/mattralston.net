@@ -34,6 +34,7 @@ import { mockArticles } from '@/data/mock-data'
 import type { Article } from '@/types'
 import { loadFromStorage, saveToStorage, storageKeys } from '@/lib/local-storage'
 import { useAuth } from '@/lib/auth-context'
+import { GatedCreateLink } from '@/components/shared/gated-create-link'
 
 const mergeArticles = (stored: Article[]) => {
   const map = new Map<string, Article>()
@@ -118,7 +119,7 @@ export default function DashboardArticlesPage() {
       description="Manage drafts and published stories."
       actions={
         <Button asChild>
-          <Link href="/dashboard/articles/new">New Article</Link>
+          <GatedCreateLink href="/dashboard/articles/new">New Article</GatedCreateLink>
         </Button>
       }
     >
