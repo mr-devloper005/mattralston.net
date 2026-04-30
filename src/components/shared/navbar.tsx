@@ -68,7 +68,7 @@ export function Navbar() {
     <header data-mobile-nav="true" className={cn('sticky top-0 z-50 w-full', tone.shell)}>
       <nav className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex min-w-0 items-center gap-3">
-          <div className={cn('flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl p-1.5', tone.logo)}>
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden">
             <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="40" height="40" className="h-full w-full object-contain" />
           </div>
           <div className="min-w-0">
