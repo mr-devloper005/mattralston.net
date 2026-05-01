@@ -10,6 +10,9 @@ import { buildPostUrl } from '@/lib/task-data'
 import { buildPostMetadata, buildTaskMetadata } from '@/lib/seo'
 import { fetchTaskPostBySlug, fetchTaskPosts } from '@/lib/task-data'
 import { SITE_CONFIG } from '@/lib/site-config'
+import { BadgeCheck, ChevronRight, Globe, ArrowUpRight, Users } from 'lucide-react'
+import { ShareButton } from '@/components/profile/share-button'
+import { FollowButton } from '@/components/profile/follow-button'
 
 export const revalidate = 3
 
@@ -108,59 +111,104 @@ export default async function ProfileDetailPage({ params }: { params: Promise<{ 
     ],
   }
 
+  const isVerified = true
+  const profileUrl = `${baseUrl}/profile/${post.slug}`
+
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#f8faff_0%,#eef2f9_100%)]">
       <NavbarShell />
-      <main className="mx-auto w-full max-w-6xl px-4 pb-16 pt-8 sm:px-6 lg:px-8">
+      <main className="mx-auto w-full max-w-6xl px-4 pb-16 pt-6 sm:px-6 lg:px-8">
         <SchemaJsonLd data={breadcrumbData} />
 
-        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-10">
-          <div className="grid gap-8 md:grid-cols-[220px_1fr] md:items-start">
-            <div className="flex justify-center md:justify-start">
-              <div className="relative h-44 w-44 overflow-hidden rounded-3xl border border-slate-200 bg-slate-100">
+        <nav className="flex items-center gap-2 text-sm">
+          <Link href="/" className="text-slate-500 hover:text-red-700 transition-colors">Home</Link>
+          <ChevronRight className="h-4 w-4 text-slate-400" />
+          <Link href="/profile" className="flex items-center gap-1.5 text-slate-500 hover:text-red-700 transition-colors">
+            <Users className="h-3.5 w-3.5" />
+            Users
+          </Link>
+          <ChevronRight className="h-4 w-4 text-slate-400" />
+          <span className="font-semibold text-slate-900">{brandName}</span>
+        </nav>
+
+        <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-[0_2px_8px_rgba(0,0,0,0.04)] md:p-10">
+          <div className="flex flex-col gap-8 md:flex-row md:items-start">
+            <div className="flex flex-col items-center md:items-start">
+              <div className="relative h-32 w-32 overflow-hidden rounded-full bg-slate-900 ring-4 ring-slate-100 md:h-36 md:w-36">
                 {logoUrl ? (
-                  <ContentImage src={logoUrl} alt={post.title} fill className="object-cover" sizes="176px" intrinsicWidth={176} intrinsicHeight={176} />
+                  <ContentImage
+                    src={logoUrl}
+                    alt={post.title}
+                    fill
+                    className="object-cover"
+                    sizes="144px"
+                    intrinsicWidth={144}
+                    intrinsicHeight={144}
+                  />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center text-4xl font-semibold text-slate-500">
+                  <div className="flex h-full w-full items-center justify-center bg-slate-900 text-3xl font-bold text-white md:text-4xl">
                     {post.title.slice(0, 1).toUpperCase()}
                   </div>
                 )}
               </div>
             </div>
 
-            <div>
-              <p className="inline-flex items-center rounded-full bg-red-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-red-700">Public profile</p>
-              <h1 className="mt-4 text-4xl font-bold tracking-[-0.03em] text-slate-900 sm:text-5xl">{brandName}</h1>
-              {domain ? <p className="mt-1 text-sm font-medium text-slate-500">{domain}</p> : null}
+            <div className="flex-1">
+              <div className="flex flex-col items-center gap-3 md:items-start">
+                <div className="flex items-center gap-3">
+                  <h1 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">{brandName}</h1>
+                  {isVerified && (
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-red-100">
+                      <BadgeCheck className="h-4 w-4 text-red-700" />
+                    </div>
+                  )}
+                </div>
+
+                {domain && (
+                  <div className="flex items-center gap-2 text-sm text-slate-500">
+                    <Globe className="h-4 w-4" />
+                    <span>{domain}</span>
+                  </div>
+                )}
+              </div>
 
               <article
-                className="article-content prose prose-slate mt-6 max-w-2xl text-base leading-relaxed prose-p:my-4 prose-a:text-red-700 prose-a:underline prose-strong:font-semibold"
+                className="mt-5 max-w-2xl text-[15px] leading-7 text-slate-600"
                 dangerouslySetInnerHTML={{ __html: descriptionHtml }}
               />
 
-              <div className="mt-6 flex flex-wrap gap-3">
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-3 md:justify-start">
                 {website ? (
-                  <Button asChild size="lg" className="rounded-full bg-[#b91c1c] px-7 text-base text-white hover:bg-[#991b1b]">
+                  <Button
+                    asChild
+                    size="default"
+                    className="h-11 gap-2 rounded-full bg-slate-900 px-6 text-sm font-semibold text-white shadow-sm hover:bg-slate-800"
+                  >
                     <Link href={website} target="_blank" rel="noopener noreferrer">
                       Visit Official Site
+                      <ArrowUpRight className="h-4 w-4" />
                     </Link>
                   </Button>
                 ) : null}
-                <Button asChild variant="outline" size="lg" className="rounded-full px-7 text-base">
-                  <Link href="/profile">Browse more profiles</Link>
-                </Button>
+                <ShareButton url={profileUrl} />
+                <FollowButton />
               </div>
             </div>
           </div>
         </section>
 
         {suggestedArticles.length ? (
-          <section className="mt-12">
+          <section className="mt-10">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold text-slate-900">Related posts</h2>
-              <Link href="/articles" className="text-sm font-semibold text-red-700 hover:underline">View all</Link>
+              <h2 className="text-xl font-semibold tracking-tight text-slate-900">Related posts</h2>
+              <Link
+                href="/articles"
+                className="text-sm font-semibold text-red-700 hover:text-red-800 hover:underline"
+              >
+                View all
+              </Link>
             </div>
-            <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-5 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
               {suggestedArticles.slice(0, 3).map((article) => (
                 <TaskPostCard
                   key={article.id}
