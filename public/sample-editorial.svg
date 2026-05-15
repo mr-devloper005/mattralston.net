@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e3a8a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <circle cx="220" cy="180" r="120" fill="#38bdf8" fill-opacity="0.25"/>
+  <circle cx="980" cy="620" r="180" fill="#22c55e" fill-opacity="0.2"/>
+  <rect x="140" y="280" width="920" height="320" rx="24" fill="#ffffff" fill-opacity="0.08" stroke="#ffffff" stroke-opacity="0.25"/>
+  <text x="180" y="360" font-family="Georgia, serif" font-size="56" fill="#e2e8f0">Editorial Workspace</text>
+  <text x="180" y="430" font-family="Arial, sans-serif" font-size="30" fill="#cbd5e1">Planning outlines, drafts, and publishing cadence</text>
+</svg>
