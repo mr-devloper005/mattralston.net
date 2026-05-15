@@ -1,7 +1,6 @@
-﻿'use client'
+'use client'
 
-import Link from 'next/link'
-import { LogOut, Settings } from 'lucide-react'
+import { LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -37,13 +36,6 @@ export function NavbarAuthControls() {
             <span className="text-xs text-slate-500">{user?.email}</span>
           </div>
         </div>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href="/settings">
-            <Settings className="mr-2 h-4 w-4" />
-            Settings
-          </Link>
-        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={logout} className="text-destructive">
           <LogOut className="mr-2 h-4 w-4" />

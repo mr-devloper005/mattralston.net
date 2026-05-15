@@ -5,7 +5,6 @@ import './globals.css'
 
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/toaster'
-import { CreateFab } from '@/components/shared/create-fab'
 import { AuthProvider } from '@/lib/auth-context'
 import { buildSiteMetadata } from '@/lib/seo'
 import { getFactoryState } from '@/design/factory/get-factory-state'
@@ -29,7 +28,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <AuthProvider>
             {children}
-            <CreateFab />
             <Toaster />
           </AuthProvider>
         </ThemeProvider>

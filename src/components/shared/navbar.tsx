@@ -4,12 +4,11 @@ import { useMemo, useState } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Search, Menu, X, User, FileText, Building2, LayoutGrid, Tag, Image as ImageIcon, Plus, Users } from 'lucide-react'
+import { Menu, X, User, FileText, Building2, LayoutGrid, Tag, Image as ImageIcon, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/lib/auth-context'
 import { SITE_CONFIG, type TaskKey } from '@/lib/site-config'
 import { cn } from '@/lib/utils'
-import { siteContent } from '@/config/site.content'
 import { getFactoryState } from '@/design/factory/get-factory-state'
 import { NAVBAR_OVERRIDE_ENABLED, NavbarOverride } from '@/overrides/navbar'
 import { GatedCreateLink } from '@/components/shared/gated-create-link'
@@ -43,7 +42,7 @@ export function Navbar() {
   const { recipe } = getFactoryState()
 
   const navigation = useMemo(() => SITE_CONFIG.tasks.filter((task) => task.enabled), [])
-  const primaryNavigation = navigation.slice(0, 6)
+  const primaryNavigation = navigation.filter((task) => task.key !== 'profile').slice(0, 6)
 
   const isDark = recipe.brandPack === 'studio-dark' || recipe.navbar === 'floating-bar'
   const tone = isDark
@@ -73,31 +72,10 @@ export function Navbar() {
           </div>
           <div className="min-w-0">
             <span className="block truncate text-base font-semibold">{SITE_CONFIG.name}</span>
-            <span className="block truncate text-[10px] uppercase tracking-[0.22em] opacity-65">{siteContent.navbar.tagline}</span>
           </div>
         </Link>
 
-        <form
-          action="/search"
-          method="get"
-          className={cn('ml-2 hidden min-w-[220px] flex-1 items-center gap-2 rounded-full px-3 py-1.5 text-sm md:flex lg:max-w-sm', tone.search)}
-        >
-          <Search className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
-          <input
-            type="search"
-            name="q"
-            placeholder="Search profiles, topics, and posts"
-            className="min-w-0 flex-1 bg-transparent text-sm text-inherit outline-none placeholder:opacity-70"
-            autoComplete="off"
-            aria-label="Search"
-          />
-        </form>
-
         <div className="ml-auto hidden items-center gap-1 lg:flex">
-          <Link href="/" className={cn('inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium', pathname === '/' ? tone.active : tone.nav)}>
-            <Users className="h-4 w-4" />
-            Home
-          </Link>
           {primaryNavigation.map((task) => {
             const Icon = taskIcons[task.key] || LayoutGrid
             const isActive = pathname.startsWith(task.route)
@@ -131,17 +109,6 @@ export function Navbar() {
       {isMobileMenuOpen ? (
         <div className="border-t border-current/10 lg:hidden">
           <div className="space-y-2 px-4 py-4 sm:px-6">
-            <form action="/search" method="get" className={cn('mb-3 flex items-center gap-2 rounded-xl px-3 py-2 text-sm', tone.search)}>
-              <Search className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
-              <input
-                type="search"
-                name="q"
-                placeholder="Search profiles, topics, and posts"
-                className="min-w-0 flex-1 bg-transparent text-sm text-inherit outline-none placeholder:opacity-70"
-                autoComplete="off"
-                aria-label="Search"
-              />
-            </form>
             {navigation.map((task) => {
               const Icon = taskIcons[task.key] || LayoutGrid
               const isActive = pathname.startsWith(task.route)

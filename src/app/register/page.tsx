@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { Suspense, useState } from 'react'
 import Link from 'next/link'
@@ -31,7 +31,7 @@ function RegisterForm() {
     await signup(name, email, password)
     toast({
       title: 'Account created',
-      description: 'Your profile session is saved locally on this browser.',
+      description: 'Your publishing session is saved locally on this browser.',
     })
     router.push(safeInternalPath(from))
   }
@@ -42,12 +42,12 @@ function RegisterForm() {
         <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="inline-flex items-center gap-2 rounded-full bg-red-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-red-700">
             <UserRoundPlus className="h-3.5 w-3.5" />
-            Join the profile network
+            Start publishing
           </div>
           <h1 className="mt-5 text-4xl font-semibold tracking-[-0.04em] text-slate-900">Create your account</h1>
-          <p className="mt-4 text-sm leading-7 text-slate-600">Set up your account to build your profile and use the site with a saved session on this device.</p>
+          <p className="mt-4 text-sm leading-7 text-slate-600">Set up your account to write articles, manage content, and use site publishing tools with a saved session.</p>
           <div className="mt-8 grid gap-3">
-            {['Profile-focused experience', 'Straightforward settings', 'Local account persistence'].map((item) => (
+            {['Article-ready account setup', 'Clear editorial workflow access', 'Local account persistence'].map((item) => (
               <div key={item} className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-700">
                 {item}
               </div>
@@ -63,7 +63,7 @@ function RegisterForm() {
             <Input className="h-12 rounded-xl border-slate-300" placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             <Input
               className="h-12 rounded-xl border-slate-300"
-              placeholder="What best describes you? (optional)"
+              placeholder="What do you publish? (optional)"
               value={creatorType}
               onChange={(e) => setCreatorType(e.target.value)}
             />

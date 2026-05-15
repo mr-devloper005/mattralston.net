@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { Suspense, useState } from 'react'
 import Link from 'next/link'
@@ -28,7 +28,7 @@ function LoginForm() {
     await login(email, password)
     toast({
       title: 'Signed in successfully',
-      description: 'Your session is now saved locally on this browser.',
+      description: 'Your publishing session is now active on this browser.',
     })
     router.push(safeInternalPath(from))
   }
@@ -39,14 +39,14 @@ function LoginForm() {
         <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="inline-flex items-center gap-2 rounded-full bg-red-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-red-700">
             <Users className="h-3.5 w-3.5" />
-            Profile network access
+            Publishing access
           </div>
           <h1 className="mt-5 text-4xl font-semibold tracking-[-0.04em] text-slate-900">Welcome back</h1>
           <p className="mt-4 text-sm leading-7 text-slate-600">
-            Sign in to manage your profile, continue where you left off, and use create and publishing tools.
+            Sign in to continue writing, manage your articles, and use moderation and publishing tools.
           </p>
           <div className="mt-8 grid gap-3">
-            {['Profile and settings in one place', 'Simple layout focused on people', 'Session saved in this browser'].map((item) => (
+            {['Article-focused publishing workflow', 'Simple editorial dashboard access', 'Session saved in this browser'].map((item) => (
               <div key={item} className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-700">
                 {item}
               </div>
